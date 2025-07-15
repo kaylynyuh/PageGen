@@ -3,7 +3,7 @@ import "./styles.scss";
 
 const LeftPanel = () => {
   return (
-    <aside>
+    <aside className='left-panel'>
       <h1>Blocks</h1>
     </aside>
   );

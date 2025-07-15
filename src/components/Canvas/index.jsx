@@ -2,8 +2,6 @@ import React, { useState, useCallback } from "react";
 import { createEditor } from "slate";
 import { Slate, Editable, withReact } from "slate-react";
 
-import Navbar from "../Navbar";
-import LeftPanel from "../LeftPanel";
 import RichText from "../RichText";
 import "./styles.scss";
 
@@ -59,8 +57,6 @@ const Canvas = () => {
 
   return (
     <div className='canvas'>
-      <Navbar />
-      <LeftPanel />
       <Slate
         editor={editor}
         initialValue={value}
