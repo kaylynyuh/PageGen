@@ -20,7 +20,6 @@ const Canvas = () => {
 
   // When the editor is first created, it is initialized with the content
   // that is passed into the useState hook.
-  //
   // We wrap the initialValue in a function to ensure that a new object is
   // created each time the component is rendered. This is important because Slate
   // mutates the value object, and we don't want to mutate the original
@@ -59,7 +58,7 @@ const Canvas = () => {
   }, []);
 
   return (
-    <div>
+    <div className='canvas'>
       <Navbar />
       <LeftPanel />
       <Slate
