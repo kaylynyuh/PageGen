@@ -1,7 +1,9 @@
 import React, { useState, useCallback } from "react";
 import { createEditor } from "slate";
 import { Slate, Editable, withReact } from "slate-react";
+
 import RichText from "./components/RichText";
+import Navbar from "./components/Navbar";
 
 // Define the initial value of the editor.
 const initialValue = [
@@ -56,7 +58,7 @@ const App = () => {
 
   return (
     <div style={{ border: "2px solid black" }}>
-      Root
+      <Navbar />
       <Slate
         editor={editor}
         initialValue={value}
