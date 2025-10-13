@@ -26,6 +26,8 @@ const Canvas = () => {
     JSON.parse(JSON.stringify(initialValue))
   );
 
+  // Wrap in a useCallback to avoid re-creating the function on each render
+  // unless the dependencies change.
   const renderElement = useCallback(({ attributes, children, element }) => {
     switch (element.type) {
       case "paragraph":
