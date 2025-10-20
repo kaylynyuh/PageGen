@@ -15,7 +15,7 @@ const initialValue = [
   },
 ];
 
-export const PageBuilderProvider = ({ children }) => {
+export const PageBuilderProvider = ({ children, onExit, onSave }) => {
   const [editor] = useState(() => withReact(createEditor()));
   const [value, setValue] = useState(() =>
     JSON.parse(JSON.stringify(initialValue))
