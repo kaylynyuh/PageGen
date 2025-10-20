@@ -1,7 +1,9 @@
 import React, { useCallback } from "react";
 import { Editor, Transforms, Text } from "slate";
+import { usePageBuilder } from "../../contexts/PageBuilderContext";
 
-const RichText = ({ editor }) => {
+const RichText = () => {
+  const { editor } = usePageBuilder();
   const isMarkActive = (format) => {
     const marks = Editor.marks(editor);
     return marks ? marks[format] === true : false;
