@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 
 import PageBuilderEditor from "./components/PageBuilderEditor";
@@ -11,6 +11,21 @@ const App = () => {
   const [save, onSave] = useState(false);
   const renderPage = exit || save;
   const showNavbar = !renderPage;
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        onExit(false);
+        onSave(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onExit, onSave]);
 
   return (
     <PageBuilderProvider>
