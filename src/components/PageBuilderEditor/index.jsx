@@ -16,7 +16,7 @@ const PageBuilderEditor = () => {
         <Slate
           editor={editor}
           initialValue={value}
-          onChange={(newValue) => setValue(newValue)}
+          onChange={setValue}
         >
           <Editable renderElement={renderElement} renderLeaf={renderLeaf} />
         </Slate>

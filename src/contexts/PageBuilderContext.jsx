@@ -1,6 +1,13 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
 import { createEditor } from "slate";
 import { withReact } from "slate-react";
+import { isEqual } from "lodash";
 
 const PageBuilderContext = createContext();
 
@@ -20,6 +27,23 @@ export const PageBuilderProvider = ({ children, onExit, onSave }) => {
   const [value, setValue] = useState(() =>
     JSON.parse(JSON.stringify(initialValue))
   );
+
+  const [isDirty, setIsDirty] = useState(false);
+  // Inform user they have unsaved changes before leaving the page
+  useEffect(() => {
+    if (isDirty) {
+      window.onbeforeunload = () => true;
+    } else {
+      window.onbeforeunload = null;
+    }
+  }, [isDirty]);
+
+  const handleValueChange = (newValue) => {
+    if (!isEqual(newValue, initialValue)) {
+      setIsDirty(true);
+    }
+    setValue(newValue);
+  };
 
   const renderElement = useCallback(({ attributes, children, element }) => {
     switch (element.type) {
@@ -53,10 +77,11 @@ export const PageBuilderProvider = ({ children, onExit, onSave }) => {
   const contextValue = {
     editor,
     value,
-    setValue,
+    setValue: handleValueChange,
     renderElement,
     renderLeaf,
     initialValue,
+    isDirty,
   };
 
   return (
