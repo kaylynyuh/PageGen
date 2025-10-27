@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { createEditor } from 'slate';
-import { withReact } from 'slate-react';
+import React, { createContext, useContext, useState, useCallback } from "react";
+import { createEditor } from "slate";
+import { withReact } from "slate-react";
 
 const PageBuilderContext = createContext();
 
@@ -10,8 +10,8 @@ export const usePageBuilder = () => {
 
 const initialValue = [
   {
-    type: 'paragraph',
-    children: [{ text: 'Hello world.' }],
+    type: "paragraph",
+    children: [{ text: "Hello world." }],
   },
 ];
 
@@ -23,7 +23,7 @@ export const PageBuilderProvider = ({ children, onExit, onSave }) => {
 
   const renderElement = useCallback(({ attributes, children, element }) => {
     switch (element.type) {
-      case 'paragraph':
+      case "paragraph":
         return <p {...attributes}>{children}</p>;
       default:
         return <div {...attributes}>{children}</div>;
@@ -33,7 +33,7 @@ export const PageBuilderProvider = ({ children, onExit, onSave }) => {
   const renderLeaf = useCallback(({ attributes, children, leaf }) => {
     if (leaf.bold && leaf.underline) {
       return (
-        <strong style={{ textDecoration: 'underline' }} {...attributes}>
+        <strong style={{ textDecoration: "underline" }} {...attributes}>
           {children}
         </strong>
       );
