@@ -22,25 +22,31 @@ const initialValue = [
   },
 ];
 
-export const PageBuilderProvider = ({ children, onExit, onSave }) => {
+export const PageBuilderProvider = ({ children, onSave }) => {
   const [editor] = useState(() => withReact(createEditor()));
   const [value, setValue] = useState(() =>
     JSON.parse(JSON.stringify(initialValue))
   );
-
+  const [lastSaved, setLastSaved] = useState(new Date());
+  const [lastModified, setLastModified] = useState(new Date());
   const [isDirty, setIsDirty] = useState(false);
-  // Inform user they have unsaved changes before leaving the page
+
   useEffect(() => {
-    if (isDirty) {
-      window.onbeforeunload = () => true;
-    } else {
-      window.onbeforeunload = null;
-    }
-  }, [isDirty]);
+    const interval = setInterval(() => {
+      if (isDirty && new Date() - lastModified > 5000) {
+        onSave(value);
+        setLastSaved(new Date());
+        setIsDirty(false);
+        setLastModified(new Date());
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isDirty, lastModified, onSave, value]);
 
   const handleValueChange = (newValue) => {
     if (!isEqual(newValue, initialValue)) {
       setIsDirty(true);
+      setLastModified(new Date());
     }
     setValue(newValue);
   };
@@ -82,6 +88,7 @@ export const PageBuilderProvider = ({ children, onExit, onSave }) => {
     renderLeaf,
     initialValue,
     isDirty,
+    lastSaved,
   };
 
   return (

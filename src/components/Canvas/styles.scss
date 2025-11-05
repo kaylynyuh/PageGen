@@ -3,6 +3,6 @@
 .canvas {
   padding: 16px 20px;
   height: 100vh;
-  background-color: $surface;
-  color: $primary-text;
+  background-color: var(--surface);
+  color: var(--primary-text);
 }
