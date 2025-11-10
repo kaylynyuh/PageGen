@@ -9,10 +9,10 @@ import { createEditor } from "slate";
 import { withReact } from "slate-react";
 import { isEqual } from "lodash";
 
-const PageBuilderContext = createContext();
+const PageGenContext = createContext();
 
-export const usePageBuilder = () => {
-  return useContext(PageBuilderContext);
+export const usePageGen = () => {
+  return useContext(PageGenContext);
 };
 
 const initialValue = [
@@ -22,26 +22,25 @@ const initialValue = [
   },
 ];
 
-export const PageBuilderProvider = ({ children, onSave }) => {
+export const PageGenProvider = ({ children }) => {
   const [editor] = useState(() => withReact(createEditor()));
   const [value, setValue] = useState(() =>
     JSON.parse(JSON.stringify(initialValue))
   );
+  const [isDirty, setIsDirty] = useState(false);
   const [lastSaved, setLastSaved] = useState(new Date());
   const [lastModified, setLastModified] = useState(new Date());
-  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (isDirty && new Date() - lastModified > 5000) {
-        onSave(value);
         setLastSaved(new Date());
         setIsDirty(false);
         setLastModified(new Date());
       }
     }, 5000);
     return () => clearInterval(interval);
-  }, [isDirty, lastModified, onSave, value]);
+  }, [isDirty, lastModified, value]);
 
   const handleValueChange = (newValue) => {
     if (!isEqual(newValue, initialValue)) {
@@ -83,17 +82,19 @@ export const PageBuilderProvider = ({ children, onSave }) => {
   const contextValue = {
     editor,
     value,
-    setValue: handleValueChange,
+    setValue,
+    handleValueChange,
     renderElement,
     renderLeaf,
     initialValue,
     isDirty,
     lastSaved,
+    setLastSaved,
   };
 
   return (
-    <PageBuilderContext.Provider value={contextValue}>
+    <PageGenContext.Provider value={contextValue}>
       {children}
-    </PageBuilderContext.Provider>
+    </PageGenContext.Provider>
   );
 };

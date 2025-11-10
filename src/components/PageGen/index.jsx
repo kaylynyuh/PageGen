@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+
+import Navbar from "../Navbar";
+import Editor from "../Editor";
+import Renderer from "../Renderer";
 import { usePageGen } from "../../contexts/PageGenContext";
-import ToggleSwitch from "../ToggleSwitch";
 import Modal from "../Modal";
 import "./styles.scss";
 
-const Navbar = () => {
-  const {lastSaved, isDirty} = usePageGen();
-  const [theme, setTheme] = useState("dark");
+const PageGen = () => {
+  const { isDirty, lastSaved, setLastSaved } = usePageGen();
   const [showExitModal, setShowExitModal] = useState(false);
-
-  useEffect(() => {
-    document.body.setAttribute("data-theme", theme);
-  }, [theme]);
 
   const getSaveStatus = () => {
     if (isDirty) {
@@ -23,8 +21,11 @@ const Navbar = () => {
     return "";
   };
 
-  const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
+  const handleSave = () => {
+    if (isDirty) {
+      const now = new Date();
+      setLastSaved(now);
+    }
   };
 
   const handleExit = () => {
@@ -40,23 +41,23 @@ const Navbar = () => {
   const cancelExit = () => {
     setShowExitModal(false);
   };
+
   return (
-    <nav className="navbar">
-      <div className="navbar-buttons">
-        <button onClick={handleExit} className="exit-button">
-          Exit
-        </button>
-        <div className="controls-right">
-          <ToggleSwitch isToggled={theme === "dark"} onToggle={toggleTheme} />
-          <span className="save-status">{getSaveStatus()}</span>
-          <button className="save-button">Save</button>
-        </div>
+    <div className="page-gen">
+      <Navbar
+        onSave={handleSave}
+        onExit={handleExit}
+        saveStatus={getSaveStatus()}
+      />
+      <div className="editor">
+        {/* <Renderer /> */}
+        <Editor />
       </div>
       <Modal show={showExitModal} onConfirm={confirmExit} onCancel={cancelExit}>
         <p>Are you sure you want to exit? Any unsaved changes will be lost.</p>
       </Modal>
-    </nav>
+    </div>
   );
 };
 
-export default Navbar;
+export default PageGen;

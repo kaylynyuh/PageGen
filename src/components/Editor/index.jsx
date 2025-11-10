@@ -1,13 +1,13 @@
 import React from 'react';
 import { Slate, Editable } from 'slate-react';
-import { usePageBuilder } from '../../contexts/PageBuilderContext';
+import { usePageGen } from '../../contexts/PageGenContext';
 import Canvas from "../Canvas";
 import LeftPanel from "../LeftPanel";
 import RightPanel from "../RightPanel";
 import './styles.scss';
 
-const PageBuilderEditor = () => {
-  const { editor, value, setValue, renderElement, renderLeaf } = usePageBuilder();
+const Editor = () => {
+  const { editor, value, handleValueChange, renderElement, renderLeaf } = usePageGen();
 
   return (
     <>
@@ -16,7 +16,7 @@ const PageBuilderEditor = () => {
         <Slate
           editor={editor}
           initialValue={value}
-          onChange={setValue}
+          onChange={handleValueChange}
         >
           <Editable renderElement={renderElement} renderLeaf={renderLeaf} />
         </Slate>
@@ -26,4 +26,4 @@ const PageBuilderEditor = () => {
   );
 };
 
-export default PageBuilderEditor;
+export default Editor;
