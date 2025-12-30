@@ -24,27 +24,33 @@ const initialValue = [
 
 export const PageGenProvider = ({ children }) => {
   const [editor] = useState(() => withReact(createEditor()));
-  const [value, setValue] = useState(() =>
-    JSON.parse(JSON.stringify(initialValue))
-  );
-  const [isDirty, setIsDirty] = useState(false);
+  const [value, setValue] = useState(() => {
+    const savedValue = localStorage.getItem("editorValue");
+    return savedValue
+      ? JSON.parse(savedValue)
+      : JSON.parse(JSON.stringify(initialValue));
+  });
   const [lastSaved, setLastSaved] = useState(new Date());
   const [lastModified, setLastModified] = useState(new Date());
 
   useEffect(() => {
+    if (!isEqual(value, initialValue)) {
+      localStorage.setItem("editorValue", JSON.stringify(value));
+    }
+  }, [value, initialValue]);
+
+  useEffect(() => {
     const interval = setInterval(() => {
-      if (isDirty && new Date() - lastModified > 5000) {
+      if (new Date() - lastModified > 5000) {
         setLastSaved(new Date());
-        setIsDirty(false);
         setLastModified(new Date());
       }
     }, 5000);
     return () => clearInterval(interval);
-  }, [isDirty, lastModified, value]);
+  }, [lastModified, value, lastSaved]);
 
   const handleValueChange = (newValue) => {
     if (!isEqual(newValue, initialValue)) {
-      setIsDirty(true);
       setLastModified(new Date());
     }
     setValue(newValue);
@@ -82,12 +88,10 @@ export const PageGenProvider = ({ children }) => {
   const contextValue = {
     editor,
     value,
-    setValue,
     handleValueChange,
     renderElement,
     renderLeaf,
     initialValue,
-    isDirty,
     lastSaved,
     setLastSaved,
   };
